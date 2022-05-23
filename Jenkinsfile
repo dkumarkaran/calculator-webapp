@@ -23,7 +23,9 @@ pipeline {
                 echo 'docker stage'
                 sh 'sudo apt-get update && sudo apt-get install docker.io -y'
                 sh 'sudo docker build /home/ubuntu/calculator-webapp/ -t devopsintellipaat/application-img1-pipeline'
-                sh 'sudo echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                sh "sudo docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                }
                 sh 'sudo docker push devopsintellipaat/application-img1-pipeline '
             }
 
